@@ -1,0 +1,29 @@
+For controller
+curl
+
+
+For relay:
+relayd
+
+luci-proto-relay
+
+For WDS:
+N/A
+
+For mesh + batman
+batctl-full
+wpad-mesh-wolfssl
+
+kmod-batman-adv
+
+luci-proto-batman-adv
+
+For ap - to remove
+ppp
+ppp-pppoe
+
+kmod-ppp
+kmod-pppoe
+kmod-pppox
+
+luci-proto-ppp

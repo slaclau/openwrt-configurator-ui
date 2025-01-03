@@ -1,0 +1,174 @@
+{
+  "devices": [
+    {
+      "model_id": "ubnt,unifi",
+      "ipaddr": "192.168.0.49",
+      "tags": { "role": "ap" },
+      "hostname": "ap-1",
+      "provisioning_config": {
+        "ssh_auth": {
+          "username": "root",
+          "password": ""
+        }
+      }
+    }
+  ],
+  "package_profiles": [
+    {
+      ".if": "device.tag.role == 'ap'",
+      "packages": ["-firewall", "-firewall4"]
+    }
+  ],
+  "configs_to_not_reset": [
+    {
+      ".if": "*",
+      "configs": [
+        "attendedsysupgrade.*",
+        "dropbear.*",
+        "collectd.*",
+        "luci.*",
+        "luci_statistics.*",
+        "rpcd.*",
+        "ucitrack.*",
+        "uhttpd.*",
+        "system.led",
+        "network.globals"
+      ]
+    }
+  ],
+  "config": {
+    "system": {
+      "system": [
+        {
+          "zonename": "Europe/London",
+          "timezone": "GMT0BST"
+        }
+      ]
+    },
+    "network": {
+      ".overrides": [
+        {
+          ".if": "device.sw_config == true",
+          "override": {
+            "switch": [
+              {
+                "name": "switch0",
+                "reset": true,
+                "enable_vlan": true
+              }
+            ],
+            "switch_vlan": [
+              {
+                "device": "switch0",
+                "vlan": 1,
+                "ports": "*"
+              }
+            ],
+            "device": [
+              {
+                "name": "br-lan.1",
+                "type": "bridge",
+                "ports": ["@cpu_port.1"]
+              }
+            ]
+          }
+        },
+        {
+          ".if": "device.sw_config == false",
+          "override": {
+            "device": [
+              {
+                "name": "br-lan",
+                "type": "bridge",
+                "ports": "*"
+              }
+            ],
+            "bridge-vlan": [
+              {
+                "device": "br-lan",
+                "vlan": 1,
+                "ports": "*"
+              },
+              {
+                "device": "br-lan",
+                "vlan": 2,
+                "ports": "*t"
+              }
+            ]
+          }
+        }
+      ],
+      "interface": [
+        {
+          ".name": "loopback",
+          "device": "lo",
+          "proto": "static",
+          "ipaddr": "127.0.0.1",
+          "netmask": "255.0.0.0"
+        },
+        {
+          ".name": "lan",
+          "device": "br-lan.1",
+          "proto": "static",
+          "ipaddr": "192.168.0.49",
+          "netmask": "255.255.255.0"
+        },
+        {
+          ".name": "iot",
+          "device": "br-lan.2",
+          "proto": "dhcp"
+        },
+        {
+          ".name": "relayd",
+          "proto": "relay",
+          "network": ["lan", "wwan"],
+          "ipaddr": "192.168.0.49"
+        },
+        {
+          ".name": "wwan",
+          "proto": "static",
+          "gateway": "192.168.0.1",
+          "ipaddr": "192.168.0.49",
+          "netmask": "255.255.255.0"
+        }
+      ]
+    },
+    "wireless": {
+      ".if": "device.tag.role == 'ap'",
+      "wifi-device": [
+        {
+          ".name": "radio0",
+          "band": "2g",
+          "htmode": "HT20",
+          "cell_density": 0,
+          "channel": "auto"
+        },
+        {
+          ".name": "radio1",
+          "band": "5g",
+          "htmode": "HT20",
+          "cell_density": 0,
+          "channel": "auto"
+        }
+      ],
+      "wifi-iface": [
+        {
+          "mode": "sta",
+          "device": ["radio0"],
+          "network": "wwan",
+          "ssid": "vodafone8C9632",
+          "encryption": "psk2",
+          "key": "njO$B51DJOE9Rkc$4AmC"
+        },
+        {
+          "mode": "ap",
+          "device": ["radio0", "radio1"],
+          "network": "lan",
+          "ssid": "Vodafone",
+          "encryption": "psk2",
+          "key": "njO$B51DJOE9Rkc$4AmC"
+        }
+      ]
+    }
+  }
+}

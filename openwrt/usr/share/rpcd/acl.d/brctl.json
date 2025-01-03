@@ -1,0 +1,10 @@
+{
+	"brctl": {
+		"description": "Call brctl functions",
+		"write": {
+			"ubus": {
+				"brctl": ["*"]
+			}
+		}
+	}
+}

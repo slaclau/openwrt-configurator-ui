@@ -1,0 +1,58 @@
+body {
+  padding-top: 70px;
+  background-color: #f0f0f0 !important;
+}
+.nav-pills .nav-item {
+  margin: 10px !important;
+}
+.nav-pills .nav-link {
+  background-color: white;
+}
+
+.MuiMasonry-root {
+  padding-left: 10px !important;
+}
+
+.card {
+  border: 0 !important;
+}
+
+.list-group-item {
+  border-width: 0.1pt !important;
+}
+.nav {
+  background-color: white !important;
+  margin: 10px !important;
+  border-radius: 10px;
+}
+.modal-body {
+  background-color: #f0f0f0 !important;
+  border-radius: 10px !important;
+}
+
+.modal-body .nav {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+.clickable-list-group {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-list-group {
+  padding: 10px;
+}
+
+.upload {
+  color: magenta;
+}
+.download {
+  color: cyan;
+}
+
+.form-control {
+  border: 0 !important;
+  text-align: right;
+  padding: 0px !important;
+}

@@ -1,0 +1,62 @@
+#!/bin/sh
+
+. /usr/share/libubox/jshn.sh
+
+lookup_port() {
+	local bridge=$1
+	local portno=$(printf "0x%x" $2)
+	local path
+
+	for path in $(grep -l $portno /sys/class/net/"$bridge"/lower_*/brport/port_no); do
+		basename $(readlink "${path%/brport/port_no}")
+		return 0
+	done
+
+	return 1
+}
+
+case "$1" in
+	list)
+		json_init
+		json_add_object "showmacs"
+		json_add_string "bridge" "string"
+		json_close_object
+		json_dump
+	;;
+	call)
+		case "$2" in
+			showmacs)
+				read input;
+				json_load "$input"
+				json_get_var bridge bridge
+				logger -t "brctl" "call" "$2" "$input"
+				json_init
+				json_add_array macs
+
+				IFS=$'\n'
+
+				for record in $(
+					hexdump -v -e '5/1 "%02x:" 1/1 "%02x " 1/1 "%u " 1/1 "%u " 1/4 "%u " 1/1 "%u " 3/1 "" "\n"' \
+						"/sys/class/net/$bridge/brforward"
+				); do
+					IFS=' '
+					set -- $record
+
+					mac=$1
+					port=$(lookup_port "$bridge" $(($5 << 16 | $2)))
+					islocal=$3
+					timer=$4
+
+					json_add_object ""
+					json_add_string mac "$mac"
+					json_add_string port "$port"
+					json_add_boolean islocal "$islocal"
+					json_add_double timer "$timer"
+					json_close_object
+				done
+				json_close_array
+				json_dump
+			;;
+		esac
+	;;
+esac

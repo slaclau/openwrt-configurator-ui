@@ -1,0 +1,10 @@
+{
+	"brctl": {
+		"description": "Call controller functions",
+		"write": {
+			"ubus": {
+				"controller": ["*"]
+			}
+		}
+	}
+}

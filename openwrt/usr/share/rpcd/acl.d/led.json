@@ -1,0 +1,10 @@
+{
+	"brctl": {
+		"description": "Call led functions",
+		"write": {
+			"ubus": {
+				"led": ["*"]
+			}
+		}
+	}
+}

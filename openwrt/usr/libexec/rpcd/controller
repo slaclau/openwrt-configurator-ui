@@ -1,0 +1,60 @@
+#!/bin/ash
+
+. /usr/share/libubox/jshn.sh
+
+call_iwinfo() {
+  local device="$1"
+  json_init
+  json_add_string device "$device"
+  echo \""$device"\": "$(ubus call iwinfo assoclist "$(json_dump)")"
+}
+
+get_antennas() {
+  local device="$1"
+  iw phy "$device" info | sed -n 's/.*Available Antennas: //p'
+}
+
+case "$1" in
+	list)
+		json_init
+		json_add_object "assoclist"
+		json_close_object
+		json_add_object "hardware"
+		json_close_object
+		json_dump
+	;;
+	call)
+		case "$2" in
+			assoclist)
+				read input;
+				logger -t "controller" "call" "$2" "$input"
+        json_load "$(ubus call iwinfo devices)"
+        json_get_values devices devices
+
+        first=1
+        echo "{"
+        for device in $devices; do
+          if [ "$first" -ne 1 ]; then
+            echo ","
+          fi;
+          call_iwinfo "$device"
+          first=0
+        done
+        echo "}"
+			;;
+	    hardware)
+				read input;
+				logger -t "controller" "call" "$2" "$input"
+        devices="$(iw phy | sed -n 's/Wiphy //p')"
+
+        json_init
+        for device in $devices; do
+          json_add_object "$device"
+          json_add_string antennas "$(get_antennas $device)"
+          json_close_object
+        done
+        json_dump
+			;;
+		esac
+	;;
+esac
