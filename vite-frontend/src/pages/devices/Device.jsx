@@ -83,25 +83,28 @@ class Device extends React.Component {
           params: ["controller", "hardware", {}],
         },
       ];
-      api.post(`/ubus/${this.props.hostname}`, queries).then((response) => {
-        this.setState({
-          wirelessDevices: response.data[0],
-          networkDevices: response.data[1],
-          networks: response.data[2],
-          network_config: response.data[3].values,
-          wireless_config: response.data[4].values,
-          system_config: response.data[5].values,
-          hostHints: response.data[6],
-          system_info: response.data[7],
-          board_info: response.data[8],
-          boardJSON: response.data[9],
-          assoclist: response.data[10],
-          hardware: response.data[11],
-          params: this.props.params,
-          old: this.state,
-        });
-        console.debug("all", this.state);
-      });
+      api
+        .post(`/ubus/${this.props.hostname}`, queries)
+        .then((response) => {
+          this.setState({
+            wirelessDevices: response.data[0],
+            networkDevices: response.data[1],
+            networks: response.data[2],
+            network_config: response.data[3].values,
+            wireless_config: response.data[4].values,
+            system_config: response.data[5].values,
+            hostHints: response.data[6],
+            system_info: response.data[7],
+            board_info: response.data[8],
+            boardJSON: response.data[9],
+            assoclist: response.data[10],
+            hardware: response.data[11],
+            params: this.props.params,
+            old: this.state,
+          });
+          console.debug("all", this.state);
+        })
+        .catch((exc) => console.log(exc));
       api
         .get(`/configuration/devices/${this.props.hostname}`)
         .then((response) => this.setState({ device_config: response.data }));
