@@ -9,7 +9,7 @@ class Devices(db.Model):
     __tablename__ = "devices"
     hostname = db.Column(db.String(4096), primary_key=True)
     description = db.Column(db.String(4096))
-    model_id = db.Column(db.String(4096), nullable=False)
+    model_id = db.Column(db.String(4096), nullable=True)
     ipaddr = db.Column(db.String(4096))
     static = db.Column(db.Integer)
     tags: db.Mapped[dict[str, str] | None] = db.mapped_column(type_=db.JSON)
