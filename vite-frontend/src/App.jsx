@@ -33,7 +33,12 @@ class App extends React.Component {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
-                <Nav.Link onClick={() => this.setState({ body: "devices" })}>
+                <Nav.Link
+                  onClick={() => {
+                    this.setState({ body: "" });
+                    this.setState({ body: "devices" });
+                  }}
+                >
                   Devices
                 </Nav.Link>
                 <Nav.Link onClick={() => this.setState({ body: "settings" })}>
