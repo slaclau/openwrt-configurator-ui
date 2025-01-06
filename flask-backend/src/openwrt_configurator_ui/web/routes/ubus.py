@@ -1,3 +1,5 @@
+import pprint
+
 import requests
 from flask import Blueprint, abort, request
 
@@ -47,7 +49,8 @@ def call_ubus(hostname):
             return [item["result"][-1] for item in rtn]
         return rtn["result"][-1]
     except KeyError:
-        print(rtn)
+        pprint.pprint(data)
+        pprint.pprint(rtn)
         abort(500)
 
 
