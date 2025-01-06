@@ -35,7 +35,7 @@ class App extends React.Component {
               <Nav className="me-auto">
                 <Nav.Link
                   onClick={() => {
-                    this.setState({ body: "" });
+                    this.setState({ body: "status" });
                     this.setState({ body: "devices" });
                   }}
                 >
